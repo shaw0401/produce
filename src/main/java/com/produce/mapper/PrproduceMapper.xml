@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.produce.mapper.PrproduceMapper">
+  <resultMap id="BaseResultMap" type="com.produce.entity.Prproduce">
+    <id column="PRProduceCode" jdbcType="VARCHAR" property="prproducecode" />
+    <result column="PRProduceDate" jdbcType="TIMESTAMP" property="prproducedate" />
+    <result column="OperatorCode" jdbcType="VARCHAR" property="operatorcode" />
+    <result column="PRPlanCode" jdbcType="VARCHAR" property="prplancode" />
+    <result column="DepartmentCode" jdbcType="VARCHAR" property="departmentcode" />
+    <result column="InvenCode" jdbcType="VARCHAR" property="invencode" />
+    <result column="Quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="StartDate" jdbcType="TIMESTAMP" property="startdate" />
+    <result column="EndDate" jdbcType="TIMESTAMP" property="enddate" />
+    <result column="IsFlag" jdbcType="CHAR" property="isflag" />
+    <result column="IsComplete" jdbcType="CHAR" property="iscomplete" />
+  </resultMap>
+
+  <resultMap id="prproduceMap" type="com.produce.entity.Prproduce" extends="BaseResultMap">
+     <association property="syassignright" javaType="com.produce.entity.Syassignright">
+       <id column="OperatorCode" jdbcType="VARCHAR" property="operatorcode" />
+       <result column="OperatorName" jdbcType="VARCHAR" property="operatorname"/>
+     </association>
+    <association property="bsinven" javaType="com.produce.entity.Bsinven">
+      <id column="InvenCode" jdbcType="VARCHAR" property="invencode" />
+      <result column="InvenName" jdbcType="VARCHAR" property="invenname" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    PRProduceCode, PRProduceDate, OperatorCode, PRPlanCode, DepartmentCode, InvenCode, 
+    Quantity, StartDate, EndDate, IsFlag, IsComplete
+  </sql>
+  <select id="selectByProduceCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from prproduce
+    where PRProduceCode = #{prproducecode,jdbcType=VARCHAR}
+  </select>
+    <!--查找信息表通过产品ID-->
+  <select id="findByInvencode" parameterType="string" resultType="com.produce.entity.Prproduce">
+    select
+    <include refid="Base_Column_List" />
+    from prproduce
+    where InvenCode = #{invencode,jdbcType=VARCHAR}
+  </select>
+  <!--信息表删除-->
+  <delete id="produceDelete" parameterType="java.lang.String">
+    delete from prproduce
+    where PRProduceCode = #{prproducecode,jdbcType=VARCHAR}
+  </delete>
+  
+  <!--添加生产信息-->
+  <insert id="insert" parameterType="com.produce.entity.Prproduce">
+    insert into prproduce
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="prproducecode != null">
+        PRProduceCode,
+      </if>
+      <if test="prproducedate != null">
+        PRProduceDate,
+      </if>
+      <if test="operatorcode != null">
+        OperatorCode,
+      </if>
+      <if test="prplancode != null">
+        PRPlanCode,
+      </if>
+      <if test="departmentcode != null">
+        DepartmentCode,
+      </if>
+      <if test="invencode != null">
+        InvenCode,
+      </if>
+      <if test="quantity != null">
+        Quantity,
+      </if>
+      <if test="startdate != null">
+        StartDate,
+      </if>
+      <if test="enddate != null">
+        EndDate,
+      </if>
+      <if test="isflag != null">
+        IsFlag,
+      </if>
+      <if test="iscomplete != null">
+        IsComplete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="prproducecode != null">
+        #{prproducecode,jdbcType=VARCHAR},
+      </if>
+      <if test="prproducedate != null">
+        #{prproducedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operatorcode != null">
+        #{operatorcode,jdbcType=VARCHAR},
+      </if>
+      <if test="prplancode != null">
+        #{prplancode,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentcode != null">
+        #{departmentcode,jdbcType=VARCHAR},
+      </if>
+      <if test="invencode != null">
+        #{invencode,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="startdate != null">
+        #{startdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null">
+        #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isflag != null">
+        #{isflag,jdbcType=CHAR},
+      </if>
+      <if test="iscomplete != null">
+        #{iscomplete,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--更新生产信息表-->
+  <update id="produceUpdate" parameterType="com.produce.entity.Prproduce">
+    update prproduce
+    <set>
+      <if test="prproducedate != null">
+        PRProduceDate = #{prproducedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operatorcode != null">
+        OperatorCode = #{operatorcode,jdbcType=VARCHAR},
+      </if>
+      <if test="prplancode != null">
+        PRPlanCode = #{prplancode,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentcode != null">
+        DepartmentCode = #{departmentcode,jdbcType=VARCHAR},
+      </if>
+      <if test="invencode != null">
+        InvenCode = #{invencode,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        Quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="startdate != null">
+        StartDate = #{startdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enddate != null">
+        EndDate = #{enddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isflag != null">
+        IsFlag = #{isflag,jdbcType=CHAR},
+      </if>
+      <if test="iscomplete != null">
+        IsComplete = #{iscomplete,jdbcType=CHAR},
+      </if>
+    </set>
+    where PRProduceCode = #{prproducecode,jdbcType=VARCHAR}
+  </update>
+  <!--查找所有生产计划-->
+  <select id="findAllProduce" resultMap="prproduceMap"  parameterType="string" >
+     SELECT PRProduceCode, PRProduceDate, syassignright.OperatorCode,prproduce.OperatorCode,syassignright.OperatorName,
+     bsinven.InvenCode,bsinven.InvenName, PRPlanCode, DepartmentCode, prproduce.InvenCode,
+      Quantity, StartDate, EndDate,
+      IsFlag, IsComplete FROM prproduce,syassignright,bsinven WHERE syassignright.OperatorCode=prproduce.OperatorCode AND
+      bsinven.InvenCode=prproduce.InvenCode
+      <if test="_parameter !=null and _parameter!='' ">
+        AND prproduce.InvenCode=#{invencode}
+      </if>
+
+
+  </select>
+</mapper>

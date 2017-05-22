@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.mybatis:mybatis-parent:24">
+    <CLASSES>
+      <root url="jar://E:/.m2/repository/org/mybatis/mybatis-parent/24/mybatis-parent-24.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://E:/.m2/repository/org/mybatis/mybatis-parent/24/mybatis-parent-24-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://E:/.m2/repository/org/mybatis/mybatis-parent/24/mybatis-parent-24-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

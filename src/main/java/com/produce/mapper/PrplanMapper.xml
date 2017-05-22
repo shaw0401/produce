@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.produce.mapper.PrplanMapper">
+  <resultMap id="BaseResultMap" type="com.produce.entity.Prplan">
+    <result column="PRPlanCode" jdbcType="CHAR" property="prplancode" />
+    <result column="PRPlanDate" jdbcType="TIMESTAMP" property="prplandate" />
+    <result column="OperatorCode" jdbcType="VARCHAR" property="operatorcode" />
+    <result column="SEOrderCode" jdbcType="VARCHAR" property="seordercode" />
+    <result column="InvenCode" jdbcType="VARCHAR" property="invencode" />
+    <result column="Quantity" jdbcType="VARCHAR" property="quantity" />
+    <result column="FinishDate" jdbcType="TIMESTAMP" property="finishdate" />
+    <result column="IsFlag" jdbcType="VARCHAR" property="isflag" />
+  </resultMap>
+    <!--查询映射-->
+    <resultMap id="planMap" type="com.produce.entity.Prplan" extends="BaseResultMap">
+        <!--操作人员关联-->
+        <association property="syassignright" javaType="com.produce.entity.Syassignright">
+            <id column="OperatorCode" jdbcType="VARCHAR" property="operatorcode" />
+            <result column="OperatorName" jdbcType="VARCHAR" property="operatorname"/>
+        </association>
+        <!--产品关联-->
+        <association property="bsinven" javaType="com.produce.entity.Bsinven">
+            <id column="InvenCode" jdbcType="VARCHAR" property="invencode" />
+            <result column="InvenName" jdbcType="VARCHAR" property="invenname" />
+        </association>
+    </resultMap>
+  <!--添加计划-->
+<!--  <insert id="insert" parameterType="com.produce.entity.Prplan">
+    insert into prplan (PRPlanCode, PRPlanDate, OperatorCode, 
+      SEOrderCode, InvenCode, Quantity, 
+      FinishDate, IsFlag)
+    values (#{prplancode,jdbcType=CHAR}, #{prplandate,jdbcType=TIMESTAMP}, #{operatorcode,jdbcType=VARCHAR}, 
+      #{seordercode,jdbcType=VARCHAR}, #{invencode,jdbcType=VARCHAR}, #{quantity,jdbcType=VARCHAR}, 
+      #{finishdate,jdbcType=TIMESTAMP}, #{isflag,jdbcType=VARCHAR})
+  </insert>-->
+
+  <!--<insert id="insertSelective" parameterType="com.produce.entity.Prplan">
+    insert into prplan
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="prplancode != null">
+        PRPlanCode,
+      </if>
+      <if test="prplandate != null">
+        PRPlanDate,
+      </if>
+      <if test="operatorcode != null">
+        OperatorCode,
+      </if>
+      <if test="seordercode != null">
+        SEOrderCode,
+      </if>
+      <if test="invencode != null">
+        InvenCode,
+      </if>
+      <if test="quantity != null">
+        Quantity,
+      </if>
+      <if test="finishdate != null">
+        FinishDate,
+      </if>
+      <if test="isflag != null">
+        IsFlag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="prplancode != null">
+        #{prplancode,jdbcType=CHAR},
+      </if>
+      <if test="prplandate != null">
+        #{prplandate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operatorcode != null">
+        #{operatorcode,jdbcType=VARCHAR},
+      </if>
+      <if test="seordercode != null">
+        #{seordercode,jdbcType=VARCHAR},
+      </if>
+      <if test="invencode != null">
+        #{invencode,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=VARCHAR},
+      </if>
+      <if test="finishdate != null">
+        #{finishdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isflag != null">
+        #{isflag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>-->
+
+  <insert id="insert" parameterType="com.produce.entity.Prplan">
+    insert into prplan (PRPlanCode, PRPlanDate, OperatorCode, 
+      SEOrderCode, InvenCode, Quantity, 
+      FinishDate, IsFlag)
+    values (#{prplancode,jdbcType=CHAR}, #{prplandate,jdbcType=TIMESTAMP}, #{operatorcode,jdbcType=VARCHAR}, 
+      #{seordercode,jdbcType=VARCHAR}, #{invencode,jdbcType=VARCHAR}, #{quantity,jdbcType=VARCHAR}, 
+      #{finishdate,jdbcType=TIMESTAMP}, #{isflag,jdbcType=VARCHAR})
+  </insert>
+
+    <!--查询生产计划-->
+ <select id="findAllPlan" resultMap="planMap" parameterType="string">
+     SELECT PRPlanCode, PRPlanDate, prplan.OperatorCode,
+      SEOrderCode,  Quantity,
+      FinishDate, IsFlag ,syassignright.OperatorName,syassignright.OperatorCode,
+      bsinven.InvenCode,bsinven.InvenName,prplan.InvenCode
+       FROM prplan,syassignright,bsinven WHERE syassignright.OperatorCode=prplan.OperatorCode AND
+       prplan.InvenCode=bsinven.InvenCode
+     <if test="_parameter !=null and _parameter!='' ">
+         AND SEOrderCode=#{seordercode}
+     </if>
+ </select>
+ <!--删除生产计划-->
+  <delete id="planDelete" parameterType="String">
+     DELETE FROM prplan WHERE PRPlanCode=#{prplancode}
+  </delete>
+  <!--通过生产计划编号查找计划-->
+  <select id="findByPrplanCode" parameterType="String" resultType="com.produce.entity.Prplan">
+     SELECT PRPlanCode, PRPlanDate, OperatorCode,
+      SEOrderCode, InvenCode, Quantity,
+      FinishDate, IsFlag FROM prplan WHERE PRPlanCode=#{prplancode}
+  </select>
+  <!--生产计划更新-->
+  <update id="updatePlan" parameterType="com.produce.entity.Prplan">
+    UPDATE prplan SET
+
+      <if test="prplandate != null">
+        PRPlanDate=#{prplandate},
+      </if>
+      <if test="operatorcode != null">
+        OperatorCode=#{operatorcode},
+      </if>
+      <if test="seordercode != null">
+        SEOrderCode=#{seordercode},
+      </if>
+      <if test="invencode != null">
+        InvenCode=#{invencode},
+      </if>
+      <if test="quantity != null">
+        Quantity=#{quantity},
+      </if>
+      <if test="finishdate != null">
+        FinishDate=#{finishdate},
+      </if>
+      <if test="isflag != null">
+        IsFlag=#{isflag}
+      </if>
+    WHERE
+    PRPlanCode=#{prplancode}
+  </update>
+
+</mapper>

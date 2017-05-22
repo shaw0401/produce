@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.produce.mapper.PrpinstoreMapper">
+  <resultMap id="BaseResultMap" type="com.produce.entity.Prpinstore">
+    <result column="PRInCode" jdbcType="VARCHAR" property="princode" />
+    <result column="PRInDate" jdbcType="TIMESTAMP" property="prindate" />
+    <result column="OperatorCode" jdbcType="VARCHAR" property="operatorcode" />
+    <result column="PRProduceCode" jdbcType="VARCHAR" property="prproducecode" />
+    <result column="StoreCode" jdbcType="VARCHAR" property="storecode" />
+    <result column="InvenCode" jdbcType="VARCHAR" property="invencode" />
+    <result column="PRQuantity" jdbcType="VARCHAR" property="prquantity" />
+    <result column="InQuantity" jdbcType="VARCHAR" property="inquantity" />
+    <result column="EmployeeCode" jdbcType="VARCHAR" property="employeecode" />
+    <result column="IsFlag" jdbcType="VARCHAR" property="isflag" />
+  </resultMap>
+  <resultMap id="storeMap" type="com.produce.entity.Prpinstore" extends="BaseResultMap">
+    <!--产品关联-->
+    <association property="bsinven" javaType="com.produce.entity.Bsinven">
+      <id column="InvenCode" jdbcType="VARCHAR" property="invencode" />
+      <result column="InvenName" jdbcType="VARCHAR" property="invenname" />
+    </association>
+    <!--操作员关联-->
+    <association property="syassignright" javaType="com.produce.entity.Syassignright">
+      <id column="OperatorCode" jdbcType="VARCHAR" property="operatorcode" />
+      <result column="OperatorName" jdbcType="VARCHAR" property="operatorname"/>
+    </association>
+  </resultMap>
+  <insert id="insert" parameterType="com.produce.entity.Prpinstore">
+    insert into prpinstore
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="princode != null">
+        PRInCode,
+      </if>
+      <if test="prindate != null">
+        PRInDate,
+      </if>
+      <if test="operatorcode != null">
+        OperatorCode,
+      </if>
+      <if test="prproducecode != null">
+        PRProduceCode,
+      </if>
+      <if test="storecode != null">
+        StoreCode,
+      </if>
+      <if test="invencode != null">
+        InvenCode,
+      </if>
+      <if test="prquantity != null">
+        PRQuantity,
+      </if>
+      <if test="inquantity != null">
+        InQuantity,
+      </if>
+      <if test="employeecode != null">
+        EmployeeCode,
+      </if>
+      <if test="isflag != null">
+        IsFlag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="princode != null">
+        #{princode,jdbcType=VARCHAR},
+      </if>
+      <if test="prindate != null">
+        #{prindate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operatorcode != null">
+        #{operatorcode,jdbcType=VARCHAR},
+      </if>
+      <if test="prproducecode != null">
+        #{prproducecode,jdbcType=VARCHAR},
+      </if>
+      <if test="storecode != null">
+        #{storecode,jdbcType=VARCHAR},
+      </if>
+      <if test="invencode != null">
+        #{invencode,jdbcType=VARCHAR},
+      </if>
+      <if test="prquantity != null">
+        #{prquantity,jdbcType=VARCHAR},
+      </if>
+      <if test="inquantity != null">
+        #{inquantity,jdbcType=VARCHAR},
+      </if>
+      <if test="employeecode != null">
+        #{employeecode,jdbcType=VARCHAR},
+      </if>
+      <if test="isflag != null">
+        #{isflag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="findAllStore" resultMap="storeMap">
+     SELECT PRInCode, PRInDate,prpinstore.OperatorCode,
+      PRProduceCode, StoreCode, prpinstore.InvenCode,
+      PRQuantity, InQuantity, EmployeeCode,
+      IsFlag ,
+      syassignright.OperatorCode,syassignright.OperatorName,
+      bsinven.InvenCode,bsinven.InvenName
+      FROM  prpinstore,syassignright,bsinven
+      WHERE prpinstore.OperatorCode=syassignright.OperatorCode AND prpinstore.InvenCode=bsinven.InvenCode
+    <if test="_parameter !=null and _parameter!='' ">
+      AND PRProduceCode=#{prproducecode}
+    </if>
+  </select>
+
+  <!--库存删除-->
+  <delete id="deleteStore" parameterType="String">
+     DELETE FROM prpinstore WHERE PRInCode=#{princode}
+  </delete>
+
+  <!--通过库存编号查找对应信息-->
+  <select id="selectByStoreCode" parameterType="String" resultType="com.produce.entity.Prpinstore">
+    SELECT PRInCode, PRInDate, OperatorCode,
+      PRProduceCode, StoreCode, InvenCode,
+      PRQuantity, InQuantity, EmployeeCode,
+      IsFlag
+      FROM prpinstore  WHERE PRInCode=#{princode}
+  </select>
+  <!--更新库存单信息-->
+  <update id="storeUpdate" parameterType="com.produce.entity.Prpinstore">
+     UPDATE prpinstore 
+    <set>
+      <if test="prindate != null">
+        PRInDate = #{prindate},
+      </if>
+      <if test="operatorcode != null">
+        OperatorCode = #{operatorcode},
+      </if>
+      <if test="prproducecode != null">
+        PRProduceCode = #{prproducecode},
+      </if>
+      <if test="storecode != null">
+        StoreCode = #{storecode},
+      </if>
+      <if test="invencode != null">
+        InvenCode = #{invencode},
+      </if>
+      <if test="prquantity != null">
+        PRQuantity = #{prquantity},
+      </if>
+      <if test="inquantity != null">
+        InQuantity = #{inquantity},
+      </if>
+      <if test="employeecode != null">
+        EmployeeCode = #{employeecode},
+      </if>
+      <if test="isflag != null">
+        IsFlag = #{isflag},
+      </if>
+    </set>
+    where PRInCode = #{princode}
+  </update>
+</mapper>

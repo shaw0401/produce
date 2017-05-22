@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.produce.mapper.PrproduceitemMapper">
+  <resultMap id="BaseResultMap" type="com.produce.entity.Prproduceitem">
+    <id column="Id" jdbcType="INTEGER" property="id" />
+    <result column="PRProduceCode" jdbcType="VARCHAR" property="prproducecode" />
+    <result column="InvenCode" jdbcType="VARCHAR" property="invencode" />
+    <result column="Quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="GetQuantity" jdbcType="INTEGER" property="getquantity" />
+    <result column="UseQuantity" jdbcType="INTEGER" property="usequantity" />
+  </resultMap>
+  <!--查询映射-->
+  <resultMap id="itemsMap" type="com.produce.entity.Prproduceitem" extends="BaseResultMap">
+    <!--产品关联-->
+    <association property="bsinven" javaType="com.produce.entity.Bsinven">
+      <id column="InvenCode" jdbcType="VARCHAR" property="invencode" />
+      <result column="InvenName" jdbcType="VARCHAR" property="invenname" />
+    </association>
+
+  </resultMap>
+  <sql id="Base_Column_List">
+    Id, PRProduceCode, InvenCode, Quantity, GetQuantity, UseQuantity
+  </sql>
+  <!--根据物料需求量id查找对应表单-->
+  <select id="selectByItemId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from prproduceitem
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--根据物料需求量id删除-->
+  <delete id="deleteByItemId" parameterType="java.lang.Integer">
+    delete from prproduceitem
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <!--添加物料需求量信息-->
+  <insert id="insert" parameterType="com.produce.entity.Prproduceitem">
+    insert into prproduceitem
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="prproducecode != null">
+        PRProduceCode,
+      </if>
+      <if test="invencode != null">
+        InvenCode,
+      </if>
+      <if test="quantity != null">
+        Quantity,
+      </if>
+      <if test="getquantity != null">
+        GetQuantity,
+      </if>
+      <if test="usequantity != null">
+        UseQuantity,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="prproducecode != null">
+        #{prproducecode,jdbcType=VARCHAR},
+      </if>
+      <if test="invencode != null">
+        #{invencode,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="getquantity != null">
+        #{getquantity,jdbcType=INTEGER},
+      </if>
+      <if test="usequantity != null">
+        #{usequantity,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <!--更新物料需求表单-->
+  <update id="updateItem" parameterType="com.produce.entity.Prproduceitem">
+    update prproduceitem
+    <set>
+      <if test="prproducecode != null">
+        PRProduceCode = #{prproducecode,jdbcType=VARCHAR},
+      </if>
+      <if test="invencode != null">
+        InvenCode = #{invencode,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        Quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="getquantity != null">
+        GetQuantity = #{getquantity,jdbcType=INTEGER},
+      </if>
+      <if test="usequantity != null">
+        UseQuantity = #{usequantity,jdbcType=INTEGER},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--查找所有生产物料需求信息-->
+  <select id="selectAllItems" resultMap="itemsMap" parameterType="string">
+    SELECT Id, PRProduceCode, bsinven.InvenCode,bsinven.InvenName,prproduceitem.InvenCode,
+      Quantity, GetQuantity, UseQuantity
+      FROM prproduceitem,bsinven WHERE   bsinven.InvenCode=prproduceitem.InvenCode
+    <if test="_parameter !=null and _parameter!='' ">
+      AND PRProduceCode=#{prproducecode}
+    </if>
+  </select>
+</mapper>

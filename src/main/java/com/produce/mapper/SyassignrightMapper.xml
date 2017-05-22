@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.produce.mapper.SyassignrightMapper">
+  <resultMap id="BaseResultMap" type="com.produce.entity.Syassignright">
+    <id column="OperatorCode" jdbcType="VARCHAR" property="operatorcode" />
+    <result column="OperatorName" jdbcType="VARCHAR" property="operatorname" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    OperatorCode, OperatorName
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from syassignright
+    where OperatorCode = #{operatorcode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from syassignright
+    where OperatorCode = #{operatorcode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.produce.entity.Syassignright">
+    insert into syassignright (OperatorCode, OperatorName)
+    values (#{operatorcode,jdbcType=VARCHAR}, #{operatorname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.produce.entity.Syassignright">
+    insert into syassignright
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="operatorcode != null">
+        OperatorCode,
+      </if>
+      <if test="operatorname != null">
+        OperatorName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="operatorcode != null">
+        #{operatorcode,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorname != null">
+        #{operatorname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.produce.entity.Syassignright">
+    update syassignright
+    <set>
+      <if test="operatorname != null">
+        OperatorName = #{operatorname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where OperatorCode = #{operatorcode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.produce.entity.Syassignright">
+    update syassignright
+    set OperatorName = #{operatorname,jdbcType=VARCHAR}
+    where OperatorCode = #{operatorcode,jdbcType=VARCHAR}
+  </update>
+
+  <!--查找所有操作员-->
+  <select id="findAllOperator" resultType="com.produce.entity.Syassignright">
+      SELECT OperatorCode, OperatorName FROM syassignright
+  </select>
+</mapper>

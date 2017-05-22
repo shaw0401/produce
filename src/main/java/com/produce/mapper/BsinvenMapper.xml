@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.produce.mapper.BsinvenMapper">
+  <resultMap id="BaseResultMap" type="com.produce.entity.Bsinven">
+    <id column="InvenCode" jdbcType="VARCHAR" property="invencode" />
+    <result column="InvenName" jdbcType="VARCHAR" property="invenname" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    InvenCode, InvenName
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bsinven
+    where InvenCode = #{invencode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bsinven
+    where InvenCode = #{invencode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.produce.entity.Bsinven">
+    insert into bsinven (InvenCode, InvenName)
+    values (#{invencode,jdbcType=VARCHAR}, #{invenname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.produce.entity.Bsinven">
+    insert into bsinven
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="invencode != null">
+        InvenCode,
+      </if>
+      <if test="invenname != null">
+        InvenName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="invencode != null">
+        #{invencode,jdbcType=VARCHAR},
+      </if>
+      <if test="invenname != null">
+        #{invenname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.produce.entity.Bsinven">
+    update bsinven
+    <set>
+      <if test="invenname != null">
+        InvenName = #{invenname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where InvenCode = #{invencode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.produce.entity.Bsinven">
+    update bsinven
+    set InvenName = #{invenname,jdbcType=VARCHAR}
+    where InvenCode = #{invencode,jdbcType=VARCHAR}
+  </update>
+  <!--查找所有记录-->
+  <select id="findAll" resultType="com.produce.entity.Bsinven">
+     SELECT InvenCode, InvenName FROM bsinven
+  </select>
+</mapper>

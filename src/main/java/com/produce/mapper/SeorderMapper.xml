@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.produce.mapper.SeorderMapper">
+  <resultMap id="BaseResultMap" type="com.produce.entity.Seorder">
+    <id column="SEOrderCode" jdbcType="VARCHAR" property="seordercode" />
+    <result column="SEOrderDate" jdbcType="TIMESTAMP" property="seorderdate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    SEOrderCode, SEOrderDate
+  </sql>
+  <!--查询所有订单号-->
+  <select id="findAllOrder" resultType="com.produce.entity.Seorder">
+     SELECT SEOrderCode, SEOrderDate FROM seorder
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from seorder
+    where SEOrderCode = #{seordercode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from seorder
+    where SEOrderCode = #{seordercode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.produce.entity.Seorder">
+    insert into seorder (SEOrderCode, SEOrderDate)
+    values (#{seordercode,jdbcType=VARCHAR}, #{seorderdate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.produce.entity.Seorder">
+    insert into seorder
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="seordercode != null">
+        SEOrderCode,
+      </if>
+      <if test="seorderdate != null">
+        SEOrderDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="seordercode != null">
+        #{seordercode,jdbcType=VARCHAR},
+      </if>
+      <if test="seorderdate != null">
+        #{seorderdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.produce.entity.Seorder">
+    update seorder
+    <set>
+      <if test="seorderdate != null">
+        SEOrderDate = #{seorderdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SEOrderCode = #{seordercode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.produce.entity.Seorder">
+    update seorder
+    set SEOrderDate = #{seorderdate,jdbcType=TIMESTAMP}
+    where SEOrderCode = #{seordercode,jdbcType=VARCHAR}
+  </update>
+</mapper>
